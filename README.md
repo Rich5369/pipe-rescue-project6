@@ -9,31 +9,36 @@ Open `index.html` in a browser, or use the VS Code Live Server extension. There 
 ## What is included
 
 - Home, instructions, gameplay, success, failure, and impact screens.
+- Easy, Medium, and Hard modes, each with a unique route for all three board sizes and different timers: 120/110/100, 90/80/70, and 70/60/50 seconds.
 - Three guaranteed solvable puzzles: 3×3, 4×4, and 5×5 grids with randomized starting rotations.
+- Shorter level deadlines as puzzles grow in each mode. The final level's marked leak can be avoided with the designed route or reached for a 150-point penalty.
 - A real elapsed-time countdown and three attempts per level.
 - Connection checking that follows matching pipe openings from the source to the bottom community outlet. Disconnected extra pipes do not affect a valid route.
-- Visible blue water on tested connected pipes, connection progress, and win confetti.
+- Pipe pieces update when rotated, and tested connected pipes visibly fill with blue water; connection progress and win confetti are also included.
 - Pause/resume (Escape also resumes), original-puzzle restart, and hints.
+- Optional sound toggle with synthesized click, failed-test, and win effects; no audio downloads or network requests are needed.
+- Score milestones at 500, 1,500, and 2,500 points, announced once per game on the result screen.
 - Live potential points, aligned source/outlet markers, a low-time warning, and controls locked outside active play.
-- Responsive layouts, keyboard-operable buttons, status announcements, and reduced-motion support.
+- Responsive layouts, keyboard-operable buttons, status announcements, and reduced-motion support. Text uses a Proxima Nova, Avenir, or Georgia font stack.
+- Footer links to charity: water's website and donation page.
 
 ## Scoring and game rules
 
-A completed level awards `max(100, 1000 + levelIndex × 250 − rotations × 10 − hints × 75 − failedTests × 100)` points. `levelIndex` starts at zero. Time is a deadline, not a score multiplier, so fewer rotations earn more points under otherwise equal conditions.
+A completed level awards `max(100, 1000 + levelIndex × 250 − rotations × 10 − hints × 75 − failedTests × 100 − (leakHit ? 150 : 0))` points. `levelIndex` starts at zero. The marked leak on level 3 deducts 150 potential points the first time tested water reaches it. Time is a deadline, not a score multiplier, so fewer rotations earn more points under otherwise equal conditions.
 
-A hint correctly orients one piece on the designed solution and reduces the potential score by 75. Failed tests cost an attempt and 100 potential points. The 100-point minimum means penalties cannot reduce a win below 100 points. Restarting restores the exact original pipe types and orientations and resets the current level's timer, attempts, rotations, and penalties, while preserving points from previously completed levels. A new game resets the run score.
+A hint correctly orients one piece on the designed solution and reduces the potential score by 75. Failed tests cost an attempt and 100 potential points. Reaching the marked leak on level 3 costs 150 potential points once per level. The 100-point minimum means penalties cannot reduce a win below 100 points. Restarting restores the exact original pipe types and orientations and resets the current level's timer, attempts, rotations, and penalties, while preserving points from previously completed levels. A new game resets the run score.
 
 Impact Points accumulate from wins during the current page session, even across new games; reloading clears them. All points, badges, and campus rewards are fictional game incentives. This independent coursework prototype is not affiliated with charity: water and does not generate donations or official rewards.
 
 ## Test it
 
-1. Start a game. Rotate a pipe and verify that its openings and rotation count change.
+1. Select Easy, Medium, or Hard on the home screen and verify the displayed level timers and different pipe routes. Rotate a pipe; its openings and rotation count change.
 2. Test the initially disconnected board: an attempt should be lost. Three failed tests show the failure screen.
 3. Restart and use hints until the route is ready, then select Test Water. Connected pipes turn blue, progress reaches 100%, and the success screen awards points after a short pause.
 4. Advance through all three levels. Verify that the score carries forward and the last level ends the run.
 5. Pause and wait: the timer must remain still. Resume with the button or Escape.
 6. Restart a level: the original arrangement is restored, and the timer, attempts, rotations, and penalties reset. Let the clock run out to test timeout.
-7. Open Rewards & Impact and verify accumulated session points and the fictional-rewards notice.
+7. Open Rewards & Impact and verify accumulated session points and the fictional-rewards notice. Turn game sounds on and off, then check click, failed-test, and win effects. Complete rounds to see score milestones.
 8. Check the layout on a narrow mobile viewport and desktop. Use Tab and Enter/Space to rotate pipes and operate controls.
 
 Dependency-free logic checks (Node.js required only for testing):

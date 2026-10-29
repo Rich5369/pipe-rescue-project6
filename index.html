@@ -19,6 +19,15 @@
       <p class="eyebrow">ONE CONNECTION AT A TIME</p>
       <h1>Pipe Rescue</h1>
       <p class="subtitle">Connect pipes. Solve puzzles. Explore the power of clean water.</p>
+      <div class="difficulty-picker">
+        <label for="difficulty">Choose your difficulty</label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <p id="difficulty-description" class="caption">Medium: 90 seconds on level 1, 80 on level 2, and 70 on level 3.</p>
+      </div>
       <div class="puzzle-preview" aria-hidden="true">
         <span class="preview-caption">YOUR NEXT CONNECTION STARTS HERE</span>
         <div class="preview-pipes">
@@ -47,13 +56,16 @@
         <li><strong>Connect the openings.</strong> Build a continuous route from the source above the grid to the community below it.</li>
         <li><strong>Test the water.</strong> Press Test Water to check your route. An unsuccessful test costs an attempt and 100 potential points.</li>
         <li><strong>Make every turn count.</strong> Each rotation costs 10 potential points. A hint fixes one pipe for 75 potential points. Each win earns at least 100 points.</li>
+        <li><strong>Watch for the leak on level 3.</strong> Water reaching the marked pipe costs 150 potential points once.</li>
+        <li><strong>Choose your challenge.</strong> Easy, Medium, and Hard each have three different pipe routes, with 120/110/100, 90/80/70, and 70/60/50 seconds respectively.</li>
       </ol>
       <div class="notice">Beat the countdown with three attempts per level. Pause freezes the clock. Restart restores the original arrangement and resets the timer, attempts, and penalties.</div>
       <div class="button-stack"><button class="primary" id="play-instructions">Start Game →</button><button data-screen="home">Back to Home</button></div>
     </section>
 
     <section id="game" class="screen" hidden>
-      <div class="game-heading"><div><p class="eyebrow">CONNECT THE COMMUNITY</p><h1>Puzzle Grid</h1></div><button id="home-button" class="quiet-button">← Home</button></div>
+      <div class="game-heading"><div><p class="eyebrow">CONNECT THE COMMUNITY</p><h1>Puzzle Grid</h1></div><div class="game-heading-actions"><button id="sound-toggle" aria-pressed="true">Sound: On</button><button id="home-button" class="quiet-button">← Home</button></div></div>
+      <p id="difficulty-status" class="caption"></p>
       <div class="stats" aria-label="Game stats">
         <div>SCORE<strong id="score">0</strong></div>
         <div>LEVEL<strong id="level">1 / 3</strong></div>
@@ -63,7 +75,7 @@
       <div class="game-layout">
         <aside class="how-panel panel">
           <h2>How to Play</h2>
-          <ol><li>Click a pipe to rotate clockwise.</li><li>Match openings from source to community.</li><li>Press <strong>Test Water</strong> to deliver!</li></ol>
+          <ol><li>Click a pipe to rotate clockwise.</li><li>Match openings from source to community.</li><li>Press <strong>Test Water</strong> to deliver!</li><li>On level 3, water reaching the marked leak costs 150 potential points once.</li></ol>
           <div class="legend"><span class="legend-dot source-dot"></span> Water source</div>
           <div class="legend"><span class="legend-dot destination-dot"></span> Community</div>
           <p class="caption">Only connected pipes carry water. Extra disconnected pieces are okay.</p>
@@ -84,7 +96,7 @@
         </div>
         <aside class="impact-panel">
           <div class="impact-fact panel"><h2>Clean water. New possibilities.</h2><p>Access to clean water supports health, education, and more time for everyday life.</p><span class="eyebrow">EVERY CONNECTION MATTERS</span></div>
-          <div class="potential-score panel"><span>POINTS IF SOLVED</span><strong id="potential">1,000</strong><small>−10 per rotation<br>−100 per failed test<br>−75 per hint</small><p class="caption">Minimum award: 100 points</p></div>
+          <div class="potential-score panel"><span>POINTS IF SOLVED</span><strong id="potential">1,000</strong><small>−10 per rotation<br>−100 per failed test<br>−75 per hint</small><p id="obstacle-rule" class="caption" hidden></p><p class="caption">Minimum award: 100 points</p></div>
           <p class="caption">Game points are fictional incentives, not donations or official rewards.</p>
         </aside>
       </div>
@@ -95,7 +107,7 @@
       <p id="result-label" class="eyebrow"></p>
       <h1 id="result-title"></h1>
       <p id="result-message" class="subtitle"></p>
-      <div class="score-card panel"><span class="eyebrow">ROUND RESULT</span><div id="result-score" class="result-score"></div><p id="result-breakdown"></p></div>
+      <div class="score-card panel"><span class="eyebrow">ROUND RESULT</span><div id="result-score" class="result-score"></div><p id="result-breakdown"></p><p id="milestone-message" class="milestone-message" role="status" aria-live="polite" hidden></p></div>
       <div class="impact-fact panel"><h2>More than a puzzle</h2><p>A connected path is your game goal. Clean water access is a real-world mission. Keep learning, one connection at a time.</p></div>
       <div class="button-stack"><button id="next" class="primary">Next Level →</button><button id="retry">Try Again</button><button data-screen="home">Home</button></div>
     </section>
@@ -111,7 +123,14 @@
       <div class="button-stack"><button data-screen="home" class="primary">Back to Home →</button></div>
     </section>
   </main>
-  <footer><span>PIPE RESCUE</span><p>An independent coursework prototype inspired by <span class="charity-name">charity: water</span>. No affiliation or real donations.</p></footer>
+  <footer>
+    <span>PIPE RESCUE</span>
+    <p>An independent coursework prototype inspired by <span class="charity-name">charity: water</span>. No affiliation or real donations.</p>
+    <nav aria-label="charity: water links">
+      <a href="https://www.charitywater.org/" target="_blank" rel="noopener noreferrer">Visit charity: water</a>
+      <a href="https://www.charitywater.org/donate/" target="_blank" rel="noopener noreferrer">Donate</a>
+    </nav>
+  </footer>
   <dialog id="pause-dialog"><p class="eyebrow">TAKE A BREATHER</p><h2>Game paused</h2><p>Your timer is paused and your puzzle is saved. Continue when you’re ready.</p><button id="resume" class="primary">Resume Game →</button></dialog>
   <div id="confetti" aria-hidden="true"></div>
 </body>

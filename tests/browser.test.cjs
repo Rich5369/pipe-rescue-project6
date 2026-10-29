@@ -35,6 +35,11 @@ const url = pathToFileURL(path.resolve(__dirname, '../index.html')).href;
     await page.goto(url);
     assert.equal(await page.locator('.home-logo img').evaluate(img => img.complete && img.naturalWidth > 0), true);
     await bothLayouts('home');
+    await page.locator('#difficulty').selectOption('easy');
+    assert.ok((await page.locator('#difficulty-description').textContent()).includes('120 seconds'));
+    await page.locator('#difficulty').selectOption('hard');
+    assert.ok((await page.locator('#difficulty-description').textContent()).includes('70 seconds'));
+    await page.locator('#difficulty').selectOption('medium');
     await click('[data-screen="instructions"]');
     await bothLayouts('instructions');
     await click('#play-instructions');
@@ -101,7 +106,7 @@ const url = pathToFileURL(path.resolve(__dirname, '../index.html')).href;
       await bothLayouts(`level-${level + 1}`);
       if (level === 2) await layout('level-3-tablet', 768);
       await page.setViewportSize({width:375,height:812});
-      const route = await value('levels[levelIndex].path.map(([r,c]) => r * levels[levelIndex].size + c)');
+      const route = await value('currentLevel().path.map(([r,c]) => r * currentLevel().size + c)');
       for (const index of route) {
         while (!await value(`board[${index}].base.every(direction => openings(board[${index}]).includes(direction))`)) {
           await page.locator('#grid button').nth(index).click();
@@ -110,7 +115,7 @@ const url = pathToFileURL(path.resolve(__dirname, '../index.html')).href;
       assert.equal(await value('state'), 'playing', 'An untested solution must not auto-win');
       assert.equal(await value('checkConnection().success'), true);
       // A disconnected source must not pass water, even when the rest is solved.
-      const source = await value('levels[levelIndex].source');
+      const source = await value('currentLevel().source');
       do { await page.locator('#grid button').nth(source).click(); } while (await value(`openings(board[${source}]).includes(0)`));
       await click('#test');
       assert.equal(await value('attempts'), 2);
@@ -118,9 +123,16 @@ const url = pathToFileURL(path.resolve(__dirname, '../index.html')).href;
       while (!await value(`board[${source}].base.every(direction => openings(board[${source}]).includes(direction))`)) {
         await page.locator('#grid button').nth(source).click();
       }
-      const earned = await value('potentialPoints()');
       await click('#test');
       assert.equal(await value('state'), 'delivering');
+      assert.equal(await value('leakHit'), false, 'Designed solution avoids the marked leak');
+      if (level === 2) {
+        const leakTile = page.locator('#grid .pipe.leak');
+        assert.ok(await leakTile.count());
+        assert.equal(await leakTile.evaluate(element => getComputedStyle(element, '::after').content), 'none');
+        assert.ok((await page.locator('#obstacle-rule').textContent()).includes('150 potential points'));
+      }
+      const earned = await value('potentialPoints()');
       assert.equal(await page.locator('#grid button:enabled').count(), 0);
       assert.equal(await page.locator('#progress').evaluate(el => el.value), 100);
       assert.ok(await page.locator('.pipe.wet').count() > 0);
